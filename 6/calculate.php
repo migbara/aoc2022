@@ -5,7 +5,7 @@
 
 function diffChars($needle,$haystack){
     //Find if all the chars of a string are differents or not
-    echo $needle." ".$haystack."\r\n";
+    // echo $needle." ".$haystack."\r\n";
     if(strlen($haystack)==1){
         return $needle != $haystack;
     }
