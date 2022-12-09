@@ -189,31 +189,49 @@ function move (&$x,&$y,&$xt,&$yt,&$h,&$t,$direction,$n){
     }
 }
 
-function move2 (&$in,$a,$b,$direction,$n){
+function move2 (&$in,$nodo,$direction,$n){
 
     //Norte (U) mueve y negativamente
     //Sur (D) mueve y positivamente
     //Este (L) mueve x negativamente
     //Oeste (R) mueve x positivamente
+
+    //La idea sera contemplar el caso 0 que se mueve libremente, y un movimiento de ese nodo debe llamar a mover el nodo siguiente
+    //Y así sucesivamente hasta que no haya más nodos que mover
+    //Solo 1 nodo en la llamada
+
+    // if(nodo = 0)
+    //     movemos libremente
+    // else {
+    //     movemos dependiendo del nodo anterior
+    // }
     
     switch ($direction) {
         case 'U':
             //Damos el primer paso con h
             for($k=0; $k < $n; $k++){
-                $in[$a]["y"]--;              
-                if(abs($in[$a]["y"]-$in[$b]["y"])>1 && ($in[$a]["x"] != $in[$b]["x"])){
-                    // echo "MOVEMOS T"."\r\n";
-                    $in[$b]["x"] = $in[$a]["x"];
-                    $in[$b]["y"] = $in[$b]["y"]+1;
+                if($nodo==0)
+                    $in[$nodo]["y"]--;              
+                else{
+                    if(abs($in[($nodo-1)]["y"]-$in[$nodo]["y"])>1 && ($in[($nodo-1)]["x"] != $in[$nodo]["x"])){
+                        // echo "MOVEMOS T"."\r\n";
+                        $in[$nodo]["x"] = $in[($nodo-1)]["x"];
+                        $in[$nodo]["y"] = $in[$nodo]["y"]+1;
+                    }
+                    elseif(($in[($nodo-1)]["x"] == $in[$nodo]["x"]) && (($in[($nodo-1)]["y"])<($in[$nodo]["y"]-1))){
+                        $in[$nodo]["y"]--;
+                    }
                 }
-                elseif(($in[$a]["x"] == $in[$b]["x"]) && (($in[$a]["y"])<($in[$b]["y"]-1))){
-                    $in[$b]["y"]--;
-                }
+                
+                $in[$nodo]["v"][$in[$nodo]["x"]][$in[$nodo]["y"]] = 'X';
+
+                if(isset($in[($nodo+1)]))
+                    move2($in,$nodo+1,$direction,$n);
                 
                 // $h[$x][$y] = 'x';
                 // $t[$xt][$yt] = 'X';
-                $in[$a]["v"][$in[$a]["x"]][$in[$a]["y"]] = 'X';
-                $in[$b]["v"][$in[$b]["x"]][$in[$b]["y"]] = 'X';
+                // $in[$a]["v"][$in[$a]["x"]][$in[$a]["y"]] = 'X';
+                // $in[$b]["v"][$in[$b]["x"]][$in[$b]["y"]] = 'X';
                 // echo "--    X: ".$x." Y: ".$y."\r\n";
                 // echo "--    XT: ".$xt." YT: ".$yt."\r\n";
             }
