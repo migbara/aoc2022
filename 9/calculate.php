@@ -189,114 +189,151 @@ function move (&$x,&$y,&$xt,&$yt,&$h,&$t,$direction,$n){
     }
 }
 
-function move2 (&$in,$nodo,$direction,$n){
+function move2 (&$in,$nodo,$direction){
 
     //Norte (U) mueve y negativamente
     //Sur (D) mueve y positivamente
     //Este (L) mueve x negativamente
     //Oeste (R) mueve x positivamente
-
-    //La idea sera contemplar el caso 0 que se mueve libremente, y un movimiento de ese nodo debe llamar a mover el nodo siguiente
-    //Y así sucesivamente hasta que no haya más nodos que mover
-    //Solo 1 nodo en la llamada
-
-    // if(nodo = 0)
-    //     movemos libremente
-    // else {
-    //     movemos dependiendo del nodo anterior
-    // }
     
     switch ($direction) {
         case 'U':
-            //Damos el primer paso con h
-            for($k=0; $k < $n; $k++){
-                if($nodo==0)
-                    $in[$nodo]["y"]--;              
-                else{
-                    if(abs($in[($nodo-1)]["y"]-$in[$nodo]["y"])>1 && ($in[($nodo-1)]["x"] != $in[$nodo]["x"])){
-                        // echo "MOVEMOS T"."\r\n";
-                        $in[$nodo]["x"] = $in[($nodo-1)]["x"];
-                        $in[$nodo]["y"] = $in[$nodo]["y"]+1;
-                    }
-                    elseif(($in[($nodo-1)]["x"] == $in[$nodo]["x"]) && (($in[($nodo-1)]["y"])<($in[$nodo]["y"]-1))){
-                        $in[$nodo]["y"]--;
-                    }
-                }
-                
-                $in[$nodo]["v"][$in[$nodo]["x"]][$in[$nodo]["y"]] = 'X';
+            // echo "MOVIENDO EL ".$nodo." ARRIBA"."\r\n";
 
-                if(isset($in[($nodo+1)]))
-                    move2($in,$nodo+1,$direction,$n);
-                
-                // $h[$x][$y] = 'x';
-                // $t[$xt][$yt] = 'X';
-                // $in[$a]["v"][$in[$a]["x"]][$in[$a]["y"]] = 'X';
-                // $in[$b]["v"][$in[$b]["x"]][$in[$b]["y"]] = 'X';
-                // echo "--    X: ".$x." Y: ".$y."\r\n";
-                // echo "--    XT: ".$xt." YT: ".$yt."\r\n";
+            if($nodo==0){
+                $in[$nodo]["y"]--;
+                // echo "MUEVE H ARRIBA"." x ".$in[$nodo]["x"]." y ".$in[$nodo]["y"]."\r\n";
             }
+            else{
+
+                if((abs($in[($nodo-1)]["y"]-$in[$nodo]["y"])>1 || abs($in[($nodo-1)]["x"]-$in[$nodo]["x"])>1) && ($in[($nodo-1)]["x"] != $in[$nodo]["x"])){
+                    
+                    if($in[($nodo-1)]["y"] > $in[$nodo]["y"])
+                        $in[$nodo]["y"] = $in[$nodo]["y"] + 1;
+                    elseif($in[($nodo-1)]["y"] < $in[$nodo]["y"])
+                        $in[$nodo]["y"] = $in[$nodo]["y"] - 1;
+
+                    if($in[($nodo-1)]["x"] < $in[$nodo]["x"])
+                        $in[$nodo]["x"] = $in[$nodo]["x"] - 1;
+                    elseif($in[($nodo-1)]["x"] > $in[$nodo]["x"])
+                        $in[$nodo]["x"] = $in[$nodo]["x"] + 1;
+                    
+                    // echo "MUEVE ".$nodo." DIAGONAL ARRIBA"." x ".$in[$nodo]["x"]." y ".$in[$nodo]["y"]."\r\n";
+                }
+                elseif(($in[($nodo-1)]["x"] == $in[$nodo]["x"]) && (($in[($nodo-1)]["y"])<($in[$nodo]["y"]-1))){
+
+                    $in[$nodo]["y"]--;
+
+                    // echo "MUEVE ".$nodo." ARRIBA"." x ".$in[$nodo]["x"]." y ".$in[$nodo]["y"]."\r\n";
+                }
+            }
+            
+            $in[$nodo]["v"][$in[$nodo]["x"]][$in[$nodo]["y"]] = 'X';
+
+            if(isset($in[($nodo+1)]))
+                move2($in,$nodo+1,$direction);
+                
             break;
         
         case 'D':
-            //Damos el primer paso con h
-            for($k=0; $k < $n; $k++){
-                $in[$a]["y"]++;              
-                if(abs($in[$a]["y"]-$in[$b]["y"])>1 && ($in[$a]["x"] != $in[$b]["x"])){
-                    // echo "MOVEMOS T"."\r\n";
-                    $in[$b]["x"] = $in[$a]["x"];
-                    $in[$b]["y"] = $in[$a]["y"]-1;
-                }
-                elseif(($in[$a]["x"] == $in[$b]["x"]) && (($in[$a]["y"])>($in[$b]["y"]+1))){
-                    $in[$b]["y"]++;
-                }
-                
-                $in[$a]["v"][$in[$a]["x"]][$in[$a]["y"]] = 'X';
-                $in[$b]["v"][$in[$b]["x"]][$in[$b]["y"]] = 'X';
-                // echo "--    X: ".$x." Y: ".$y."\r\n";
-                // echo "--    XT: ".$xt." YT: ".$yt."\r\n";
+            if($nodo==0){
+                $in[$nodo]["y"]++;              
+                // echo "MUEVE H ABAJO"." x ".$in[$nodo]["x"]." y ".$in[$nodo]["y"]."\r\n";
             }
+            else{
+                if((abs($in[($nodo-1)]["y"]-$in[$nodo]["y"])>1 || abs($in[($nodo-1)]["x"]-$in[$nodo]["x"])>1) && ($in[($nodo-1)]["x"] != $in[$nodo]["x"])){
+                    
+                    if($in[($nodo-1)]["y"] > $in[$nodo]["y"])
+                        $in[$nodo]["y"] = $in[$nodo]["y"] + 1;
+                    elseif($in[($nodo-1)]["y"] < $in[$nodo]["y"])
+                        $in[$nodo]["y"] = $in[$nodo]["y"] - 1;
+
+                    if($in[($nodo-1)]["x"] < $in[$nodo]["x"])
+                        $in[$nodo]["x"] = $in[$nodo]["x"] - 1;
+                    elseif($in[($nodo-1)]["x"] > $in[$nodo]["x"])
+                        $in[$nodo]["x"] = $in[$nodo]["x"] + 1;
+
+                    // echo "MUEVE ".$nodo." DIAGONAL ABAJO"." x ".$in[$nodo]["x"]." y ".$in[$nodo]["y"]."\r\n";
+                }
+                elseif(($in[($nodo-1)]["x"] == $in[$nodo]["x"]) && (($in[($nodo-1)]["y"])>($in[$nodo]["y"]+1))){
+
+                    $in[$nodo]["y"]++;
+                    // echo "MUEVE ".$nodo." ABAJO"." x ".$in[$nodo]["x"]." y ".$in[$nodo]["y"]."\r\n";
+                }
+            }
+            
+            $in[$nodo]["v"][$in[$nodo]["x"]][$in[$nodo]["y"]] = 'X';
+
+            if(isset($in[($nodo+1)]))
+                move2($in,$nodo+1,$direction);
+            
             break;
         
         case 'L':
-            //Damos el primer paso con h
-            for($k=0; $k < $n; $k++){
-                $in[$a]["x"]--;              
-                if(abs($in[$a]["x"]-$in[$b]["x"])>1 && ($in[$a]["y"] != $in[$b]["y"])){
-                    // echo "MOVEMOS T"."\r\n";
-                    $in[$b]["y"] = $in[$a]["y"];
-                    $in[$b]["x"] = $in[$a]["x"]+1;
-                }
-                elseif(($in[$a]["y"] == $in[$b]["y"]) && (($in[$a]["x"])<($in[$b]["x"]-1))){
-                    $in[$b]["x"]--;
-                }
-                
-                $in[$a]["v"][$in[$a]["x"]][$in[$a]["y"]] = 'X';
-                $in[$b]["v"][$in[$b]["x"]][$in[$b]["y"]] = 'X';
-                // echo "--    X: ".$x." Y: ".$y."\r\n";
-                // echo "--    XT: ".$xt." YT: ".$yt."\r\n";
+            if($nodo==0){
+                $in[$nodo]["x"]--;
+                // echo "MUEVE H IZQUIERDA"." x ".$in[$nodo]["x"]." y ".$in[$nodo]["y"]."\r\n";
             }
+            else{             
+                if((abs($in[($nodo-1)]["y"]-$in[$nodo]["y"])>1 || abs($in[($nodo-1)]["x"]-$in[$nodo]["x"])>1) && ($in[($nodo-1)]["y"] != $in[$nodo]["y"])){
+                    
+                    if($in[($nodo-1)]["y"] > $in[$nodo]["y"])
+                        $in[$nodo]["y"] = $in[$nodo]["y"] + 1;
+                    elseif($in[($nodo-1)]["y"] < $in[$nodo]["y"])
+                        $in[$nodo]["y"] = $in[$nodo]["y"] - 1;
+
+                    if($in[($nodo-1)]["x"] < $in[$nodo]["x"])
+                        $in[$nodo]["x"] = $in[$nodo]["x"] - 1;
+                    elseif($in[($nodo-1)]["x"] > $in[$nodo]["x"])
+                        $in[$nodo]["x"] = $in[$nodo]["x"] + 1;
+                    
+                    // echo "MUEVE ".$nodo." DIAGONAL IZQUIERDA"." x ".$in[$nodo]["x"]." y ".$in[$nodo]["y"]."\r\n";
+                }
+                elseif(($in[($nodo-1)]["y"] == $in[$nodo]["y"]) && (($in[($nodo-1)]["x"])<($in[$nodo]["x"]-1))){
+                    $in[$nodo]["x"]--;
+                    // echo "MUEVE ".$nodo." IZQUIERDA"." x ".$in[$nodo]["x"]." y ".$in[$nodo]["y"]."\r\n";
+                }
+            }
+            
+            $in[$nodo]["v"][$in[$nodo]["x"]][$in[$nodo]["y"]] = 'X';
+
+            if(isset($in[($nodo+1)]))
+                move2($in,$nodo+1,$direction);
+            
             break;
         
         case 'R':
-            //Damos el primer paso con h
-            for($k=0; $k < $n; $k++){
-                $in[$a]["x"]++;              
-                if(abs($in[$a]["x"]-$in[$b]["x"])>1 && ($in[$a]["y"] != $in[$b]["y"])){
-                    // echo "MOVEMOS T"."\r\n";
-                    $in[$b]["y"] = $in[$a]["y"];
-                    $in[$b]["x"] = $in[$a]["x"]-1;
-                }
-                elseif(($in[$a]["y"] == $in[$b]["y"]) && (($in[$a]["x"])>($in[$b]["x"]+1))){
-                    $in[$b]["x"]++;
-                }
-                
-                $in[$a]["v"][$in[$a]["x"]][$in[$a]["y"]] = 'X';
-                $in[$b]["v"][$in[$b]["x"]][$in[$b]["y"]] = 'X';
-                // echo "--    X: ".$x." Y: ".$y."\r\n";
-                // echo "--    XT: ".$xt." YT: ".$yt."\r\n";
-                echo "--    X: ".$in[$a]["x"]." Y: ".$in[$a]["y"]."\r\n";
-                echo "--    XT: ".$in[$b]["x"]." YT: ".$in[$b]["y"]."\r\n";
+            if($nodo==0){
+                $in[$nodo]["x"]++;
+                // echo "MUEVE H DERECHA"." x ".$in[$nodo]["x"]." y ".$in[$nodo]["y"]."\r\n";
             }
+            else{
+                if((abs($in[($nodo-1)]["y"]-$in[$nodo]["y"])>1 || abs($in[($nodo-1)]["x"]-$in[$nodo]["x"])>1) && ($in[($nodo-1)]["y"] != $in[$nodo]["y"])){
+                    
+                    if($in[($nodo-1)]["y"] > $in[$nodo]["y"])
+                        $in[$nodo]["y"] = $in[$nodo]["y"] + 1;
+                    elseif($in[($nodo-1)]["y"] < $in[$nodo]["y"])
+                        $in[$nodo]["y"] = $in[$nodo]["y"] - 1;
+
+                    if($in[($nodo-1)]["x"] < $in[$nodo]["x"])
+                        $in[$nodo]["x"] = $in[$nodo]["x"] - 1;
+                    elseif($in[($nodo-1)]["x"] > $in[$nodo]["x"])
+                        $in[$nodo]["x"] = $in[$nodo]["x"] + 1;
+                    
+                    // echo "MUEVE ".$nodo." DIAGONAL DERECHA"." x ".$in[$nodo]["x"]." y ".$in[$nodo]["y"]."\r\n";
+                }
+                elseif(($in[($nodo-1)]["y"] == $in[$nodo]["y"]) && (($in[($nodo-1)]["x"])>($in[$nodo]["x"]+1))){
+                    $in[$nodo]["x"]++;
+                    // echo "MUEVE ".$nodo." DERECHA"." x ".$in[$nodo]["x"]." y ".$in[$nodo]["y"]."\r\n";
+                }
+            }
+
+            // print_r($in[$nodo]);
+            
+            $in[$nodo]["v"][$in[$nodo]["x"]][$in[$nodo]["y"]] = 'X';
+
+            if(isset($in[($nodo+1)]))
+                move2($in,$nodo+1,$direction);
             
             break;
         
@@ -304,6 +341,8 @@ function move2 (&$in,$nodo,$direction,$n){
             
             break;
     }
+
+    return null;
 }
 
 function calculate($file,$part=""){
@@ -372,7 +411,7 @@ function calculate($file,$part=""){
 
         $in=[];
 
-        $nudos = 2;
+        $nudos = 10;
 
         for ($i=0; $i < $nudos; $i++) {
 
@@ -387,8 +426,8 @@ function calculate($file,$part=""){
             $direction = $step[0];
             $long = $step[1];
 
-            for($i=1; $i<$nudos; $i++){
-                move2($in,$i-1,$i,$direction,$long);
+            for($k=0; $k < $long; $k++){
+                move2($in,0,$direction);
             }
         }
 
@@ -396,7 +435,7 @@ function calculate($file,$part=""){
         // echo "XT: ".$xt." YT: ".$yt."\r\n";
         // print_r($t);
 
-        print_r($in);
+        // print_r($in);
 
         //Contar los puntos de $in[$nudos-1]
         $cont = 0;
@@ -414,11 +453,6 @@ function calculate($file,$part=""){
     return ["result"=>$result];
 }
 
-// if(diffChars("m","jqj")){
-//     echo "true";
-// } 
-// else
-//     echo "false";
 
 $part0 = calculate('');
 echo "PART 0"."\r\n";
@@ -430,14 +464,19 @@ echo "PART 1"."\r\n";
 echo "---------------------------------------"."\r\n";
 echo "RESULT ".$part1["result"]."\r\n"."\r\n";
 
-$part20 = calculate('',2);
+$part21 = calculate('',2);
 echo "PART 2 1"."\r\n";
 echo "---------------------------------------"."\r\n";
-echo "RESULT ".$part20["result"]."\r\n"."\r\n";
+echo "RESULT ".$part21["result"]."\r\n"."\r\n";
 
-exit();
+$part22 = calculate('0',2);
+echo "PART 2 2"."\r\n";
+echo "---------------------------------------"."\r\n";
+echo "RESULT ".$part22["result"]."\r\n"."\r\n";
+
 $part2 = calculate(1,2);
 echo "PART 2"."\r\n";
 echo "---------------------------------------"."\r\n";
 echo "RESULT ".$part2["result"]."\r\n"."\r\n";
 
+exit();
